@@ -10,7 +10,11 @@ except FileNotFoundError as e:
     st.error(f"Error loading model or data: {e}")
     st.stop()
 
-st.title('Car Price Prediction ML Model')
+# Apply vibrant colors to the title
+st.markdown(
+    "<h1 style='color: #FF4B4B;'>Car Price Prediction ML Model</h1>",
+    unsafe_allow_html=True,
+)
 
 def get_brand_name(car_name):
     if not isinstance(car_name, str) or not car_name:
@@ -21,6 +25,22 @@ def get_brand_name(car_name):
         return "Unknown"
 
 cars_data['name'] = cars_data['name'].apply(get_brand_name)
+
+# Apply vibrant colors to select boxes and sliders
+st.markdown(
+    """
+    <style>
+    .stSelectbox > div > div > div > div {
+        background-color: #4CAF50; /* Green */
+        color: white;
+    }
+    .stSlider > div > div > div > div {
+        background-color: #2196F3; /* Blue */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 name = st.selectbox("Select Car Brand", cars_data['name'].unique())
 year = st.slider("Car Manufactured Year", 1994, 2024)
@@ -62,6 +82,6 @@ if st.button("Predict"):
     # Ensure all columns match the model's expected columns
     try:
         prediction = model.predict(input_data)
-        st.markdown(f"Car price is going to be ₹{prediction[0]:,.2f}")
+        st.markdown(f"<h3 style='color: #008080;'>Car price is going to be ₹{prediction[0]:,.2f}</h3>", unsafe_allow_html=True) #teal color
     except ValueError as e:
         st.error(f"Prediction Error: {e}. Please ensure the input data is correct and matches the model's expected format.")
