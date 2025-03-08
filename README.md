@@ -18,12 +18,19 @@ Streamlit: This creates a user-friendly web application. Users can input car fea
 Overall Process:
 
 1.Load car data from a CSV file using pandas (likely imported with NumPy).
+
 2.Clean and prepare the data for modeling.
+
 3.Define features that influence car price (e.g., mileage, year, make, model).
+
 4.Create a linear regression model using scikit-learn.
+
 5.Train the model on a portion of the data.
+
 6.Evaluate the model's performance to assess its accuracy.
+
 7.Build a Streamlit web app where users can input car features.
+
 8.Use the trained model within the app to predict car prices based on user input.
 
 Benefits:
