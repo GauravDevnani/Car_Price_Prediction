@@ -1,21 +1,23 @@
-# Car-Price-Prediction-ML-Model
+# 🌟Car-Price-Prediction-ML-Model🌟
 
 This machine learning model predicts the price of a car based on various features that influence its value. It utilizes linear regression, a popular algorithm for continuous value prediction tasks. The entire project involves:
 
-Data Preparation:
+## **Data Preparation:**
 
-NumPy and CSV: This part uses NumPy for numerical computations and pandas (likely imported alongside NumPy) to load the car data from a CSV file.
+***NumPy and CSV:*** This part uses NumPy for numerical computations and pandas (likely imported alongside NumPy) to load the car data from a CSV file.
 Data Cleaning: The data might undergo cleaning steps to handle missing values, inconsistencies, and format data appropriately for modeling.
 Model Building:
 
-Scikit-learn: The scikit-learn library provides tools for machine learning tasks. Here, it's used to implement the linear regression model.
+***Scikit-learn:*** The scikit-learn library provides tools for machine learning tasks. Here, it's used to implement the linear regression model.
 Feature Engineering: This might involve creating new features from existing ones to improve model performance.
 Training: The model is trained on a portion of the car data, where it learns the relationship between features and car prices.
-Model Deployment:
 
-Streamlit: This creates a user-friendly web application. Users can input car features, and the trained model predicts the car's price based on the learned relationship.
 
-Overall Process:
+## **Model Deployment:**
+
+***Streamlit:*** This creates a user-friendly web application. Users can input car features, and the trained model predicts the car's price based on the learned relationship.
+
+## **Overall Process:**
 
 1.Load car data from a CSV file using pandas (likely imported with NumPy).
 
@@ -33,7 +35,7 @@ Overall Process:
 
 8.Use the trained model within the app to predict car prices based on user input.
 
-Benefits:
+## **Benefits:**
 
 Easy to understand: Linear regression offers a clear interpretation of how features affect car prices.
 Fast predictions: Streamlit allows for quick price predictions through the web app.
