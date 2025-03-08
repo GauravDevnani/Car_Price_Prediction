@@ -1,133 +1,71 @@
 import pandas as pd
-
 import numpy as np
-
 import pickle as pk
-
 import streamlit as st
 
+model=pk. load(open('model.pkl','rb'))
 
+st.title('  Car Price Prediction ML Model')
+# st.subheader('Enter the details of the car to predict the price')
 
-try:
-
-    model = pk.load(open('model.pkl', 'rb'))
-
-    cars_data = pd.read_csv("Cardetails.csv")
-
-except FileNotFoundError as e:
-
-    st.error(f"Error loading model or data: {e}")
-
-    st.stop()
-
-
-
-st.title('Car Price Prediction ML Model')
-
-
+cars_data=pd.read_csv("Cardetails.csv")
 
 def get_brand_name(car_name):
+    car_name=car_name.split(' ')[0]
+    return car_name.strip()
+cars_data['name']=cars_data['name'].apply(get_brand_name)
 
-    if not isinstance(car_name, str) or not car_name:
+name=st.selectbox("Select Car Brand",cars_data['name'].unique())
 
-        return "Unknown"
+year=st.slider("Car Manufactured Year",1994,2024)
 
-    try:
+km_driven=st.slider("No. of kms driven",11,200000)
 
-        return car_name.split(' ')[0].strip().lower()
+fuel=st.selectbox("Fuel Type",cars_data['fuel'].unique())
 
-    except IndexError:
+seller_type=st.selectbox("Seller Type",cars_data['seller_type'].unique())
 
-        return "Unknown"
+transmission=st.selectbox("Transmission Type",cars_data['transmission'].unique())
 
+owner=st.selectbox("Owner",cars_data['owner'].unique())
 
+mileage=st.slider("Car Mileage",10,40)
 
-cars_data['name'] = cars_data['name'].apply(get_brand_name)
+engine=st.slider("Engine CC",700,5000)
 
+max_power=st.slider("Max Power",0,2000)
 
-
-name = st.selectbox("Select Car Brand", cars_data['name'].unique())
-
-year = st.slider("Car Manufactured Year", 1994, 2024)
-
-km_driven = st.slider("No. of kms driven", 11, 200000)
-
-fuel = st.selectbox("Fuel Type", cars_data['fuel'].unique())
-
-seller_type = st.selectbox("Seller Type", cars_data['seller_type'].unique())
-
-transmission = st.selectbox("Transmission Type", cars_data['transmission'].unique())
-
-owner = st.selectbox("Owner", cars_data['owner'].unique())
-
-mileage = st.slider("Car Mileage", 10, 40)
-
-engine = st.slider("Engine CC", 700, 5000)
-
-max_power = st.slider("Max Power", 0, 2000)
-
-seats = st.slider("No. of seats", 5, 10)
-
-
+seats=st.slider("No. of seats",5,10)
 
 if st.button("Predict"):
+    input_data_model = pd.DataFrame(
+        [[name,year,km_driven,fuel,seller_type,transmission,owner,mileage,engine,max_power,seats]],
+        columns=['name','year','km_driven','fuel','seller_type','transmission','owner','mileage','engine','max_power','seats']
+    )
 
-    input_data = pd.DataFrame({
+    input_data_model['owner'].replace(['First Owner', 'Second Owner', 'Third Owner',
+       'Fourth & Above Owner', 'Test Drive Car'],[1,2,3,4,5],inplace=True)
 
-        'name': [name],
+    input_data_model['fuel'].replace(['Diesel', 'Petrol', 'LPG', 'CNG'],[1,2,3,4],inplace=True)
 
-        'year': [year],
+    input_data_model['seller_type'].replace(['Individual', 'Dealer', 'Trustmark Dealer'],[1,2,3],inplace=True)
 
-        'km_driven': [km_driven],
+    input_data_model['transmission'].replace(['Manual', 'Automatic'],[1,2],inplace=True)
 
-        'fuel': [fuel],
+    input_data_model['name'].replace(['Maruti', 'Skoda', 'Honda', 'Hyundai', 'Toyota', 'Ford', 'Renault',
+       'Mahindra', 'Tata', 'Chevrolet', 'Datsun', 'Jeep', 'Mercedes-Benz',
+       'Mitsubishi', 'Audi', 'Volkswagen', 'BMW', 'Nissan', 'Lexus',
+       'Jaguar', 'Land', 'MG', 'Volvo', 'Daewoo', 'Kia', 'Fiat', 'Force',
+       'Ambassador', 'Ashok', 'Isuzu', 'Opel'],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],inplace=True)
 
-        'seller_type': [seller_type],
+    # st.write(input_data_model)
 
-        'transmission': [transmission],
+    
+    car_price=model.predict(input_data_model)
 
-        'owner': [owner],
-
-        'mileage': [mileage],
-
-        'engine': [engine],
-
-        'max_power': [max_power],
-
-        'seats': [seats]
-
-    })
-
-
-
-    # Preprocessing (Crucial - Adapt to your model's training)
-
-    # Example: One-Hot Encoding (Highly Recommended)
-
-    input_data = pd.get_dummies(input_data, columns=['name', 'fuel', 'seller_type', 'transmission', 'owner'], drop_first=True)
+    st.markdown("Car price is going to be "+str(car_price[0]))
 
 
-
-    # Example: Scaling (If your model was trained on scaled data)
-
-    # from sklearn.preprocessing import StandardScaler
-
-    # scaler = StandardScaler() # replace with your scaler
-
-    # numerical_cols = ['year', 'km_driven', 'mileage', 'engine', 'max_power', 'seats']
-
-    # input_data[numerical_cols] = scaler.transform(input_data[numerical_cols])
+# after running the above code use command "streamlit run app.py" to deploy this code into a web application.
 
 
-
-    # Ensure all columns match the model's expected columns
-
-    try:
-
-        prediction = model.predict(input_data)
-
-        st.markdown(f"Car price is going to be ₹{prediction[0]:,.2f}")
-
-    except ValueError as e:
-
-        st.error(f"Prediction Error: {e}. Please ensure the input data is correct and matches the model's expected format.")
